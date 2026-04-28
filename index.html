@@ -106,15 +106,22 @@ async function loadRPM() {
 }
 
 async function rev() {
+  const snap = await getDoc(rpmRef);
+
+  if (!snap.exists()) {
+    await setDoc(rpmRef, { value: 1 });
+    document.getElementById("rpm").innerText = "RPM: 1";
+    return;
+  }
+
   await updateDoc(rpmRef, {
     value: increment(1)
   });
 
-  const snap = await getDoc(rpmRef);
+  const updated = await getDoc(rpmRef);
   document.getElementById("rpm").innerText =
-    "RPM: " + snap.data().value;
+    "RPM: " + updated.data().value;
 }
-
 loadRPM().then(val => {
   document.getElementById("rpm").innerText = "RPM: " + val;
 });
