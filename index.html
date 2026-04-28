@@ -175,6 +175,12 @@ const db = getFirestore(app);
 
 const rpmRef = doc(db, "stats", "rpm");
 
+loadRPM().then(val => {
+  currentRPM = val; // IMPORTANT
+  document.getElementById("rpm").innerText = val + " RPM";
+  updateNeedle();
+});
+  
 async function loadRPM() {
   const snap = await getDoc(rpmRef);
   if (!snap.exists()) {
@@ -248,6 +254,8 @@ function rpmToAngle(rpm) {
 
 function updateNeedle() {
   const needle = document.getElementById("needle");
+  if (!needle) return;
+
   needle.style.transform = `rotate(${rpmToAngle(currentRPM)}deg)`;
 }
 
@@ -285,6 +293,11 @@ function stopRev() {
     updateNeedle();
   }, 40);
 }  
+
+window.startRev = startRev;
+window.stopRev = stopRev;
+window.revClickCounter = revClickCounter;
+window.updateNeedle = updateNeedle;
   
 </script>
 <div id="lightbox" onclick="closeLightbox()">
