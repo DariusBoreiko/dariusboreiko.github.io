@@ -99,9 +99,9 @@ button:active {
   <img src="bike3.jpg" onclick="openLightbox(this)">
 </div>
 
-<h2 id="rpm">RPM: 0</h2>
+<h2 id="rpm">0 RPM</h2>
 
-<button onclick="rev()">REV 🔥</button>
+<button onclick="rev()">REV IT🔥</button>
   
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -141,9 +141,9 @@ async function loadRPM() {
 async function rev() {
   const rpmEl = document.getElementById("rpm");
 
-  let current = parseInt(rpmEl.innerText.replace("RPM: ", "")) || 0;
+  let current = parseInt(rpmEl.innerText) || 0;
   current++;
-  rpmEl.innerText = "RPM: " + current;
+  rpmEl.innerText = current + " RPM";
 
   try {
     await updateDoc(rpmRef, {
@@ -155,7 +155,7 @@ async function rev() {
 }
 
 loadRPM().then(val => {
-  document.getElementById("rpm").innerText = "RPM: " + val;
+  document.getElementById("rpm").innerText = val + " RPM";
 });
 
 window.rev = rev;
