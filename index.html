@@ -87,6 +87,41 @@ button:active {
   transition: opacity 0.3s;
 }
 
+.tachometer {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 40px auto;
+  border-radius: 50%;
+  background: conic-gradient(
+    green 0deg 200deg,
+    yellow 200deg 260deg,
+    red 260deg 320deg
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dial {
+  width: 85%;
+  height: 85%;
+  background: black;
+  border-radius: 50%;
+}
+
+#needle {
+  position: absolute;
+  width: 4px;
+  height: 120px;
+  background: white;
+  bottom: 50%;
+  left: 50%;
+  transform-origin: bottom center;
+  transform: rotate(-120deg);
+  transition: transform 0.05s linear;
+}
+    
 </style>
 </head>
 <body>
@@ -99,9 +134,20 @@ button:active {
   <img src="bike3.jpg" onclick="openLightbox(this)">
 </div>
 
+<div class="tachometer">
+  <div class="dial"></div>
+  <div id="needle"></div>
+</div>
+
 <h2 id="rpm">0 RPM</h2>
 
-<button onclick="rev()">REV IT🔥</button>
+<button 
+  onmousedown="startRev()" 
+  onmouseup="stopRev()" 
+  onmouseleave="stopRev()"
+>
+  REV IT 🔥
+</button>
   
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -178,6 +224,60 @@ window.closeLightbox = closeLightbox;
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeLightbox();
 });
+
+let currentRPM = 0;
+let interval = null;
+
+const MAX_RPM = 20000;
+const REDLINE = 16000;
+const LIMITER = 16400;
+
+// convert RPM → needle angle
+function rpmToAngle(rpm) {
+  const minAngle = -120;
+  const maxAngle = 120;
+  return minAngle + (rpm / MAX_RPM) * (maxAngle - minAngle);
+}
+
+function updateNeedle() {
+  const needle = document.getElementById("needle");
+  const angle = rpmToAngle(currentRPM);
+  needle.style.transform = `rotate(${angle}deg)`;
+}
+
+function startRev() {
+  if (interval) return;
+
+  interval = setInterval(() => {
+    if (currentRPM < LIMITER) {
+      currentRPM += 300;
+    } else {
+      // bounce limiter
+      currentRPM -= 500;
+    }
+
+    document.getElementById("rpm").innerText = Math.floor(currentRPM) + " RPM";
+    updateNeedle();
+  }, 50);
+}
+
+function stopRev() {
+  clearInterval(interval);
+  interval = null;
+
+  // smooth drop
+  const decay = setInterval(() => {
+    if (currentRPM <= 0) {
+      currentRPM = 0;
+      clearInterval(decay);
+    } else {
+      currentRPM -= 400;
+    }
+
+    document.getElementById("rpm").innerText = Math.floor(currentRPM) + " RPM";
+    updateNeedle();
+  }, 50);
+}  
   
 </script>
 <div id="lightbox" onclick="closeLightbox()">
