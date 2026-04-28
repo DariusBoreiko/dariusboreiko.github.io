@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Portfolio</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      text-align: center;
+      font-family: Arial;
+    }
+    img {
+      width: 300px;
+      margin: 10px;
+    }
+    button {
+      padding: 15px;
+      font-size: 20px;
+      background: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h1>My Motorcycle</h1>
+
+<img src="bike1.jpg">
+<img src="bike2.jpg">
+<img src="bike3.jpg">
+
+<h2 id="rpm">RPM: 0</h2>
+
+<button onclick="rev()">REV 🔥</button>
+
+<script>
+  let rpm = 0;
+  function rev() {
+    rpm++;
+    document.getElementById("rpm").innerText = "RPM: " + rpm;
+  }
+</script>
+
+</body>
+</html>
