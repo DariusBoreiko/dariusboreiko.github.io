@@ -106,22 +106,21 @@ async function loadRPM() {
 }
 
 async function rev() {
-  const snap = await getDoc(rpmRef);
+  const rpmEl = document.getElementById("rpm");
 
-  if (!snap.exists()) {
-    await setDoc(rpmRef, { value: 1 });
-    document.getElementById("rpm").innerText = "RPM: 1";
-    return;
+  let current = parseInt(rpmEl.innerText.replace("RPM: ", "")) || 0;
+  current++;
+  rpmEl.innerText = "RPM: " + current;
+
+  try {
+    await updateDoc(rpmRef, {
+      value: increment(1)
+    });
+  } catch {
+    await setDoc(rpmRef, { value: current });
   }
-
-  await updateDoc(rpmRef, {
-    value: increment(1)
-  });
-
-  const updated = await getDoc(rpmRef);
-  document.getElementById("rpm").innerText =
-    "RPM: " + updated.data().value;
 }
+
 loadRPM().then(val => {
   document.getElementById("rpm").innerText = "RPM: " + val;
 });
