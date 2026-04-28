@@ -141,9 +141,9 @@ button:active {
 
 <h2 id="rpm">0 RPM</h2>
 
-<button 
-  onmousedown="startRev()" 
-  onmouseup="stopRev()" 
+<button
+  onmousedown="startRev(); revClickCounter();"
+  onmouseup="stopRev()"
   onmouseleave="stopRev()"
 >
   REV IT 🔥
@@ -184,6 +184,14 @@ async function loadRPM() {
   return snap.data().value;
 }
 
+async function revClickCounter() {
+  await updateDoc(rpmRef, {
+    value: increment(1)
+  }).catch(async () => {
+    await setDoc(rpmRef, { value: 1 });
+  });
+}
+  
 async function rev() {
   const rpmEl = document.getElementById("rpm");
 
@@ -229,7 +237,6 @@ let currentRPM = 0;
 let interval = null;
 
 const MAX_RPM = 20000;
-const REDLINE = 16000;
 const LIMITER = 16400;
 
 // convert RPM → needle angle
@@ -241,8 +248,7 @@ function rpmToAngle(rpm) {
 
 function updateNeedle() {
   const needle = document.getElementById("needle");
-  const angle = rpmToAngle(currentRPM);
-  needle.style.transform = `rotate(${angle}deg)`;
+  needle.style.transform = `rotate(${rpmToAngle(currentRPM)}deg)`;
 }
 
 function startRev() {
@@ -250,11 +256,12 @@ function startRev() {
 
   interval = setInterval(() => {
     if (currentRPM < LIMITER) {
-      currentRPM += 300;
+      currentRPM += 600; // fast rise
     } else {
-      // bounce limiter
-      currentRPM -= 500;
+      currentRPM -= 900; // limiter bounce
     }
+
+    if (currentRPM < 0) currentRPM = 0;
 
     document.getElementById("rpm").innerText = Math.floor(currentRPM) + " RPM";
     updateNeedle();
@@ -265,18 +272,18 @@ function stopRev() {
   clearInterval(interval);
   interval = null;
 
-  // smooth drop
   const decay = setInterval(() => {
     if (currentRPM <= 0) {
       currentRPM = 0;
       clearInterval(decay);
-    } else {
-      currentRPM -= 400;
+      return;
     }
+
+    currentRPM -= 800;
 
     document.getElementById("rpm").innerText = Math.floor(currentRPM) + " RPM";
     updateNeedle();
-  }, 50);
+  }, 40);
 }  
   
 </script>
