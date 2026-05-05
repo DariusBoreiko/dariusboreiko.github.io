@@ -94,9 +94,9 @@ button:active {
   margin: 40px auto;
   border-radius: 50%;
   background: conic-gradient(
-    green 0deg 200deg,
-    yellow 200deg 260deg,
-    red 260deg 320deg
+    green 120deg 290deg,
+    yellow 290deg 345deg,
+    red 345deg 360deg
   );
   display: flex;
   justify-content: center;
@@ -106,7 +106,7 @@ button:active {
 .dial {
   width: 85%;
   height: 85%;
-  background: black;
+  background: orange;
   border-radius: 50%;
 }
 
@@ -118,7 +118,7 @@ button:active {
   bottom: 50%;
   left: 50%;
   transform-origin: bottom center;
-  transform: rotate(-120deg);
+  transform: rotate(-240deg);
   transition: transform 0.05s linear;
 }
     
@@ -247,8 +247,8 @@ const LIMITER = 16400;
 
 // convert RPM → needle angle
 function rpmToAngle(rpm) {
-  const minAngle = -120;
-  const maxAngle = 120;
+  const minAngle = -240;
+  const maxAngle = 60;
   return minAngle + (rpm / MAX_RPM) * (maxAngle - minAngle);
 }
 
