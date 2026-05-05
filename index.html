@@ -143,7 +143,7 @@ button:active {
 <h2 id="rpm">0 RPM</h2>
 
 <button
-  onmousedown="startRev(); revClickCounter();"
+  onmousedown="startRev()"
   onmouseup="stopRev()"
   onmouseleave="stopRev()"
 >
@@ -280,6 +280,8 @@ function startRev() {
 function stopRev() {
   clearInterval(interval);
   interval = null;
+
+  revClickCounter();
 
   const decay = setInterval(() => {
     if (currentRPM <= 0) {
