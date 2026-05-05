@@ -248,7 +248,7 @@ const LIMITER = 16400;
 
 // convert RPM → needle angle
 function rpmToAngle(rpm) {
-  const minAngle = 240;
+  const minAngle = 120;
   const maxAngle = 345;
   return minAngle + (rpm / MAX_RPM) * (maxAngle - minAngle);
 }
