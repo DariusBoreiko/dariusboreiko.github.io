@@ -143,7 +143,7 @@ button:active {
 <h2 id="rpm">0 RPM</h2>
 
 <button
-  onmousedown="startRev()"
+  onmousedown="startRev(); revClickCounter();"
   onmouseup="stopRev()"
   onmouseleave="stopRev()"
 >
