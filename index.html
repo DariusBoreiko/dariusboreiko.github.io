@@ -243,13 +243,13 @@ document.addEventListener("keydown", (e) => {
 let currentRPM = 0;
 let interval = null;
 
-const MAX_RPM = 20000;
+const MAX_RPM = 16400;
 const LIMITER = 16400;
 
 // convert RPM → needle angle
 function rpmToAngle(rpm) {
   const minAngle = -240;
-  const maxAngle = 60;
+  const maxAngle = -345;
   return minAngle + (rpm / MAX_RPM) * (maxAngle - minAngle);
 }
 
